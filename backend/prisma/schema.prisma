@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model student {
+  uuid    Int     @id @default(autoincrement())
+  name    String? @db.VarChar(100)
+  gender  String? @db.VarChar(10)
+  address String? @db.VarChar(100)
+  grades  grade[]
+}
+
+model school_subject {
+  uuid         Int     @id @default(autoincrement())
+  subject_name String? @db.VarChar(100)
+  grades       grade[]
+}
+
+model grade {
+  uuid                Int             @id @default(autoincrement())
+  student_uuid        Int?
+  school_subject_uuid Int?
+  grade_value         String?         @db.Char(1)
+  student             student?        @relation(fields: [student_uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "grade_ibfk_1")
+  subject             school_subject? @relation(fields: [school_subject_uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "grade_ibfk_2")
+
+  @@index([school_subject_uuid], map: "school_subject_uuid")
+  @@index([student_uuid], map: "student_uuid")
+}
