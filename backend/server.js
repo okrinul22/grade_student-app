@@ -52,7 +52,7 @@ app.post("/students", async (req, res) => {
 // UPDATE student
 app.put("/students/:uuid", async (req, res) => {
   try {
-    const { uuid } = req.params
+    const uuid = Number(req.params.uuid)
     const { name, gender, address } = req.body
 
     const student = await prisma.student.update({
@@ -73,7 +73,7 @@ app.put("/students/:uuid", async (req, res) => {
 // DELETE student
 app.delete("/students/:uuid", async (req, res) => {
   try {
-    const { uuid } = req.params
+    const uuid = Number(req.params.uuid)
 
     await prisma.student.delete({
       where: { uuid }
@@ -115,7 +115,7 @@ app.post("/subjects", async (req, res) => {
 // UPDATE subject
 app.put("/subjects/:uuid", async (req, res) => {
   try {
-    const { uuid } = req.params
+    const uuid = Number(req.params.uuid)
     const { subject_name } = req.body
 
     const subject = await prisma.school_subject.update({
@@ -132,7 +132,7 @@ app.put("/subjects/:uuid", async (req, res) => {
 // DELETE subject
 app.delete("/subjects/:uuid", async (req, res) => {
   try {
-    const { uuid } = req.params
+    const uuid = Number(req.params.uuid)
 
     await prisma.school_subject.delete({
       where: { uuid }
@@ -182,7 +182,7 @@ app.post("/grades", async (req, res) => {
 // DELETE grade
 app.delete("/grades/:uuid", async (req, res) => {
   try {
-    const { uuid } = req.params
+    const uuid = Number(req.params.uuid)
 
     await prisma.grade.delete({
       where: { uuid }
