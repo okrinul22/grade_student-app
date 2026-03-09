@@ -153,7 +153,7 @@ app.get("/grades", async (req, res) => {
   const grades = await prisma.grade.findMany({
     include: {
       student: true,
-      school_subject: true
+      subject: true
     }
   })
 
@@ -163,13 +163,13 @@ app.get("/grades", async (req, res) => {
 // CREATE grade
 app.post("/grades", async (req, res) => {
   try {
-    const { student_uuid, school_subject_uuid, grade } = req.body
+    const { student_uuid, school_subject_uuid, score } = req.body
 
     const newGrade = await prisma.grade.create({
       data: {
-        student_uuid,
-        school_subject_uuid,
-        grade
+        student_uuid: Number(student_uuid),
+        school_subject_uuid: Number(school_subject_uuid),
+        grade_value: String(score)
       }
     })
 
