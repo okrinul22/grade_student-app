@@ -1,0 +1,269 @@
+================================================================================
+                    STUDENT EXERCISE PROJECT - STEP BY STEP
+================================================================================
+
+Project Location: c:\laragon\www\student_exercise
+
+================================================================================
+                         TERMINAL COMMANDS USED
+================================================================================
+
+STEP 1: Create Project Folder
+-----------------------------
+cd c:\laragon\www
+mkdir student_exercise
+cd student_exercise
+
+
+STEP 2: Create Database (in MySQL)
+----------------------------------
+- Open phpMyAdmin or MySQL terminal
+- Create database: exercise_db
+
+
+STEP 3: Setup Backend
+----------------------
+cd c:\laragon\www\student_exercise
+mkdir backend
+cd backend
+npm init -y
+npm install express cors dotenv mysql2 prisma @prisma/client
+
+
+STEP 4: Initialize Prisma
+-------------------------
+cd c:\laragon\www\student_exercise\backend
+npx prisma init
+
+
+STEP 5: Generate Prisma Client
+------------------------------
+cd c:\laragon\www\student_exercise\backend
+npx prisma generate
+
+
+STEP 6: Run Backend Server
+--------------------------
+cd c:\laragon\www\student_exercise\backend
+node server.js
+
+
+STEP 7: Setup Frontend (React + Vite)
+-------------------------------------
+cd c:\laragon\www\student_exercise
+npm create vite@latest frontend -- --template react
+cd frontend
+npm install
+npm install react-router-dom
+
+
+STEP 8: Run Frontend
+--------------------
+cd c:\laragon\www\student_exercise\frontend
+npm run dev
+
+
+================================================================================
+                         FILES CREATED
+================================================================================
+
+BACKEND FILES:
+--------------
+1. backend/package.json          - Node.js dependencies configuration
+2. backend/.env                  - Database connection string
+3. backend/prisma/schema.prisma  - Database models (student, school_subject, grade)
+4. backend/prismaClient.js       - Prisma client initialization
+5. backend/server.js             - Main Express server with CRUD API
+
+FRONTEND FILES:
+---------------
+1. frontend/package.json         - React dependencies configuration
+2. frontend/index.html           - HTML entry point
+3. frontend/vite.config.js       - Vite configuration
+4. frontend/src/main.jsx         - React entry point
+5. frontend/src/App.jsx          - Main app with routing
+6. frontend/src/App.css          - App styles
+7. frontend/src/index.css        - Global styles
+8. frontend/src/pages/Students.jsx  - Students CRUD page
+9. frontend/src/pages/Subjects.jsx   - Subjects CRUD page
+10. frontend/src/pages/Grades.jsx    - Grades CRUD page
+
+
+================================================================================
+                    CODE DETAILS WITH LINE NUMBERS
+================================================================================
+
+================================================================================
+FILE: backend/.env
+================================================================================
+Line 12: DATABASE_URL="mysql://root:@localhost:3306/exercise_db"
+         - MySQL database connection string
+
+
+================================================================================
+FILE: backend/prisma/schema.prisma
+================================================================================
+Lines 1-3:   Generator client configuration
+Lines 5-8:   Database datasource (MySQL)
+Lines 10-16: student model (uuid, name, gender, address, grades relation)
+Lines 18-22: school_subject model (uuid, subject_name, grades relation)
+Lines 24-34: grade model (uuid, student_uuid, school_subject_uuid, grade_value)
+
+
+================================================================================
+FILE: backend/prismaClient.js
+================================================================================
+Lines 1-7: Complete file
+           - Import dotenv and PrismaClient
+           - Create and export prisma instance
+
+
+================================================================================
+FILE: backend/server.js (MAIN API FILE)
+================================================================================
+
+--- SETUP & CONFIGURATION ---
+Lines 1-4:    Import express, cors, and prisma
+Lines 6-9:    Create app and setup middleware (cors, json)
+
+--- ROOT ENDPOINT ---
+Lines 11-21:  GET "/" - Show API info and available endpoints
+
+--- STUDENT CRUD ---
+Lines 28-31:  GET /students - Get all students
+Lines 34-50:  POST /students - Create new student (name, gender, address)
+Lines 53-71:  PUT /students/:uuid - Update student by UUID
+Lines 74-86:  DELETE /students/:uuid - Delete student by UUID
+
+--- SUBJECT CRUD ---
+Lines 93-96:  GET /subjects - Get all subjects
+Lines 99-113: POST /subjects - Create new subject (subject_name)
+Lines 116-130: PUT /subjects/:uuid - Update subject by UUID
+Lines 132-145: DELETE /subjects/:uuid - Delete subject by UUID
+
+--- GRADES CRUD ---
+Lines 152-161: GET /grades - Get all grades with student and subject info
+Lines 164-180: POST /grades - Create new grade
+Lines 183-195: DELETE /grades/:uuid - Delete grade by UUID
+
+--- SERVER START ---
+Lines 201-203: Start server on port 3000
+
+
+================================================================================
+FILE: frontend/src/App.jsx
+================================================================================
+Lines 1-5:    Import BrowserRouter, Routes, Route, NavLink and pages
+Lines 6-53:   App component
+Lines 12-43:  Navigation menu (NavLink to Students, Subjects, Grades)
+Lines 45-49:  Routes configuration
+
+
+================================================================================
+FILE: frontend/src/pages/Students.jsx
+================================================================================
+Lines 1-2:    Import useEffect, useState
+Lines 5-9:    State variables (students, name, gender, address, editUuid)
+Lines 11-19:  loadStudents() - Fetch students from API
+Lines 21-23:  useEffect - Load students on mount
+Lines 25-45:  handleSubmit() - Add or Update student
+Lines 47-50:  deleteStudent(uuid) - Delete student
+Lines 52-57:  editStudent(student) - Set form for editing
+Lines 59-64:  cancelEdit() - Cancel editing
+Lines 66-105: JSX - Form and table for students CRUD
+
+
+================================================================================
+FILE: frontend/src/pages/Subjects.jsx
+================================================================================
+Lines 1-2:    Import useEffect, useState
+Lines 5-7:    State variables (subjects, subjectName, editUuid)
+Lines 9-17:   loadSubjects() - Fetch subjects from API
+Lines 19-21:  useEffect - Load subjects on mount
+Lines 23-41:  handleSubmit() - Add or Update subject
+Lines 43-46:  deleteSubject(uuid) - Delete subject
+Lines 48-51:  editSubject(subject) - Set form for editing
+Lines 53-56:  cancelEdit() - Cancel editing
+Lines 58-97:  JSX - Form and table for subjects CRUD
+
+
+================================================================================
+FILE: frontend/src/pages/Grades.jsx
+================================================================================
+Lines 1-2:    Import useEffect, useState
+Lines 5-11:   State variables (grades, students, subjects, studentUuid, subjectUuid, score)
+Lines 13-25:  loadData() - Fetch grades, students, and subjects from API
+Lines 27-29:  useEffect - Load data on mount
+Lines 31-51:  addGrade() - Add new grade
+Lines 53-56:  deleteGrade(uuid) - Delete grade
+Lines 58-114: JSX - Form with dropdowns and table for grades CRUD
+
+
+================================================================================
+                         HOW TO RUN THE PROJECT
+================================================================================
+
+1. Start MySQL database (Laragon - Start All)
+
+2. Start Backend:
+   cd c:\laragon\www\student_exercise\backend
+   node server.js
+   (Server runs on http://localhost:3000)
+
+3. Start Frontend (in new terminal):
+   cd c:\laragon\www\student_exercise\frontend
+   npm run dev
+   (Frontend runs on http://localhost:5173)
+
+4. Open browser: http://localhost:5173
+
+
+================================================================================
+                         DATABASE TABLES
+================================================================================
+
+Table: student
+--------------
+- uuid (INT, Primary Key, Auto Increment)
+- name (VARCHAR 100)
+- gender (VARCHAR 10)
+- address (VARCHAR 100)
+
+Table: school_subject
+---------------------
+- uuid (INT, Primary Key, Auto Increment)
+- subject_name (VARCHAR 100)
+
+Table: grade
+------------
+- uuid (INT, Primary Key, Auto Increment)
+- student_uuid (INT, Foreign Key -> student.uuid)
+- school_subject_uuid (INT, Foreign Key -> school_subject.uuid)
+- grade_value (CHAR 1)
+
+
+================================================================================
+                         API ENDPOINTS
+================================================================================
+
+Students:
+- GET    http://localhost:3000/students      - Get all students
+- POST   http://localhost:3000/students      - Create student
+- PUT    http://localhost:3000/students/:uuid - Update student
+- DELETE http://localhost:3000/students/:uuid - Delete student
+
+Subjects:
+- GET    http://localhost:3000/subjects      - Get all subjects
+- POST   http://localhost:3000/subjects      - Create subject
+- PUT    http://localhost:3000/subjects/:uuid - Update subject
+- DELETE http://localhost:3000/subjects/:uuid - Delete subject
+
+Grades:
+- GET    http://localhost:3000/grades        - Get all grades
+- POST   http://localhost:3000/grades        - Create grade
+- DELETE http://localhost:3000/grades/:uuid   - Delete grade
+
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================

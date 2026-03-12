@@ -15,7 +15,8 @@ app.get("/", (_req, res) => {
     endpoints: [
       "/students",
       "/subjects",
-      "/grades"
+      "/grades",
+      "/reports"
     ]
   })
 })
@@ -191,6 +192,74 @@ app.delete("/grades/:uuid", async (req, res) => {
     res.json({ message: "Grade deleted" })
   } catch (error) {
     res.status(500).json({ error: error.message })
+  }
+})
+
+/* =========================
+   REPORT API
+========================= */
+
+// GET student reports with average score
+app.get("/reports", async (req, res) => {
+  try {
+    const grades = await prisma.grade.findMany({
+      include: {
+        student: true,
+        subject: true
+      }
+    })
+
+    const report = {}
+
+    // Grade value to number mapping
+    const gradeToNumber = { 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0 }
+
+    grades.forEach(g => {
+      const studentUuid = g.student_uuid
+
+      if (!report[studentUuid]) {
+        report[studentUuid] = {
+          uuid: studentUuid,
+          name: g.student?.name || 'Unknown',
+          gender: g.student?.gender,
+          address: g.student?.address,
+          subjects: [],
+          total: 0,
+          count: 0
+        }
+      }
+
+      report[studentUuid].subjects.push({
+        subject: g.subject?.subject_name || 'Unknown',
+        score: g.grade_value
+      })
+
+      const scoreValue = gradeToNumber[g.grade_value?.toUpperCase()] || 0
+      report[studentUuid].total += scoreValue
+      report[studentUuid].count += 1
+    })
+
+    const result = Object.values(report).map(r => ({
+      uuid: r.uuid,
+      name: r.name,
+      gender: r.gender,
+      address: r.address,
+      subjects: r.subjects,
+      average: r.count > 0 ? (r.total / r.count).toFixed(2) : '0.00',
+      averageLetter: r.count > 0 ? getAverageLetter(r.total / r.count) : '-'
+    }))
+
+    function getAverageLetter(avg) {
+      if (avg >= 4) return 'A'
+      if (avg >= 3) return 'B'
+      if (avg >= 2) return 'C'
+      if (avg >= 1) return 'D'
+      return 'E'
+    }
+
+    res.json(result)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 })
 

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma generate)",
+      "Bash(npm install @prisma/adapter-mysql)",
+      "Bash(npm search @prisma/adapter --json)",
+      "Bash(npm install @prisma/adapter-mariadb)",
+      "Bash(node server.js)",
+      "Bash(curl http://localhost:3000/students)",
+      "Bash(docker-compose down:*)"
+    ]
+  }
+}
